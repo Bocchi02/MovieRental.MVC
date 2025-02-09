@@ -29,6 +29,34 @@
                 <span asp-validation-for="ReturnDate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">Selected Movies</label>
+                <ul id="selectedMoviesList" class="list-group">
+                    @foreach (var movie in ViewBag.SelectedMovies)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@movie.Title</span>
+                            <select name="Statuses" class="form-control status-dropdown">
+                                <option value="Rented" selected="@(movie.Status == "Rented" ? "selected" : null)">Rented</option>
+                                <option value="Returned" selected="@(movie.Status == "Returned" ? "selected" : null)">Returned</option>
+                                <option value="Late" selected="@(movie.Status == "Late" ? "selected" : null)">Late</option>
+                            </select>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeMovie(@movie.MovieId)">Remove</button>
+                            <input type="hidden" name="MovieIds" value="@movie.MovieId" />
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="control-label">Add Movie</label>
+                <div class="input-group">
+                    <select id="movieDropdown" class="form-control" asp-items="ViewBag.MovieList">
+                        <option value="">-- Select Movie --</option>
+                    </select>
+                    <button type="button" class="btn btn-success" onclick="addMovie()">Add</button>
+                </div>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -41,4 +69,48 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function addMovie() {
+            var dropdown = document.getElementById("movieDropdown");
+            var selectedValue = dropdown.value;
+            var selectedText = dropdown.options[dropdown.selectedIndex].text;
+
+            if (selectedValue) {
+                var list = document.getElementById("selectedMoviesList");
+
+                // Prevent duplicate selections
+                if (document.querySelector(`input[value="${selectedValue}"]`)) {
+                    alert("Movie is already selected!");
+                    return;
+                }
+
+                var listItem = document.createElement("li");
+                listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                listItem.innerHTML = `
+                    <span>${selectedText}</span>
+                    <select name="Statuses" class="form-control status-dropdown">
+                        <option value="Rented">Rented</option>
+                        <option value="Returned">Returned</option>
+                    </select>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeMovie(${selectedValue})">Remove</button>
+                    <input type="hidden" name="MovieIds" value="${selectedValue}" />
+                `;
+
+                list.appendChild(listItem);
+            }
+        }
+
+        function removeMovie(movieId) {
+            var list = document.getElementById("selectedMoviesList");
+            var items = list.getElementsByTagName("li");
+
+            for (var i = 0; i < items.length; i++) {
+                var input = items[i].querySelector("input");
+                if (input && input.value == movieId) {
+                    list.removeChild(items[i]);
+                    break;
+                }
+            }
+        }
+    </script>
 }

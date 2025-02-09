@@ -4,28 +4,53 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Create Rental</h1>
 
-<h4>RentalHeader</h4>
+<h4>Rental Header</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Customer Selection -->
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
             </div>
+
+            <!-- Rental Date -->
             <div class="form-group">
                 <label asp-for="RentalDate" class="control-label"></label>
                 <input asp-for="RentalDate" class="form-control" />
                 <span asp-validation-for="RentalDate" class="text-danger"></span>
             </div>
+
+            <!-- Return Date -->
             <div class="form-group">
                 <label asp-for="ReturnDate" class="control-label"></label>
                 <input asp-for="ReturnDate" class="form-control" />
                 <span asp-validation-for="ReturnDate" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label class="control-label">Select Movies</label>
+                <div id="movieDropdowns">
+                    <div class="movie-selection">
+                        <select name="MovieIds" class="form-control">
+                            @foreach (var movie in ViewBag.Movies)
+                            {
+                                <option value="@movie.Value">@movie.Text</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-danger remove-movie">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-success mt-2" id="addMovie">Add Another Movie</button>
+            </div>
+
+
+            <!-- Submit Button -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -33,10 +58,25 @@
     </div>
 </div>
 
+<!-- Back Link -->
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.getElementById("addMovie").addEventListener("click", function () {
+            var dropdown = document.querySelector(".movie-selection").cloneNode(true);
+            document.getElementById("movieDropdowns").appendChild(dropdown);
+        });
+
+        document.getElementById("movieDropdowns").addEventListener("click", function (event) {
+            if (event.target.classList.contains("remove-movie")) {
+                event.target.parentElement.remove();
+            }
+        });
+    </script>
 }
+

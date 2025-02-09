@@ -7,29 +7,58 @@
 <h1>Details</h1>
 
 <div>
-    <h4>RentalHeader</h4>
+    <h4>Rental Information</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RentalDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RentalDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ReturnDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ReturnDate)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
+        <dt class="col-sm-2">
+            Customer Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.CustomerId)
+        <dd class="col-sm-10">
+            @Model.Customer.Firstname @Model.Customer.Lastname
         </dd>
     </dl>
+
+    <h4>Rented Movies</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.RentalHeaderDetails != null && Model.RentalHeaderDetails.Any())
+            {
+                @foreach (var detail in Model.RentalHeaderDetails)
+                {
+                    <tr>
+                        <td>@detail.Movie.Title</td>
+                        <td>@detail.Status</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2" class="text-center">No movies rented.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.RentalHeaderId">Edit</a> |
     <a asp-action="Index">Back to List</a>

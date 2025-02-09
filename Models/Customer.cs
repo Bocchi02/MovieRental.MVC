@@ -10,6 +10,6 @@
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public DateTime MembershipDate { get; set; }
-        public ICollection<RentalHeader> RentalHeaders { get; set; }
+        public ICollection<RentalHeader>? RentalHeaders { get; set; }
     }
 }

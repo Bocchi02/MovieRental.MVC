@@ -7,6 +7,6 @@
         public DateTime RentalDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public Customer? Customer { get; set; }
-        public ICollection<RentalHeaderDetail> RentalHeaderDetails { get; set; }
+        public ICollection<RentalHeaderDetail> RentalHeaderDetails { get; set; } = new List<RentalHeaderDetail>();
     }
 }
